@@ -1,9 +1,8 @@
 {
-   "name": "react-native-better-components",
+   "name": "react-native-better-html-components",
    "version": "1.0.0",
-   "description": "A component library for react native that is as close to plane react-native components as possible",
+   "description": "A component library for react native that is as close to plane react-native as possible",
    "main": "dist/index.js",
-   "triggerDeployment": 3,
    "files": [
       "dist"
    ],
