@@ -76,7 +76,7 @@ function BetterComponentsProviderInternalContent({ children }: BetterComponentsP
    return <>{children}</>;
 }
 
-export type BetterComponentsProviderConfig = DeepPartialRecord<BetterComponentsConfig>;
+type BetterComponentsProviderInternalConfig = DeepPartialRecord<BetterComponentsConfig>;
 
 type BetterProviderCommonProps = {
    plugins?: BetterComponentsPlugin[];
@@ -84,7 +84,7 @@ type BetterProviderCommonProps = {
 };
 
 type BetterComponentsProviderInternalProps = BetterProviderCommonProps & {
-   config?: BetterComponentsProviderConfig;
+   config?: BetterComponentsProviderInternalConfig;
 };
 
 function BetterComponentsProviderInternal({ config, plugins, children }: BetterComponentsProviderInternalProps) {
@@ -127,8 +127,10 @@ function BetterComponentsProviderInternal({ config, plugins, children }: BetterC
    );
 }
 
+export type BetterComponentsProviderConfig = BetterCoreProviderConfig & BetterComponentsProviderInternalConfig;
+
 type BetterComponentsProviderProps = BetterProviderCommonProps & {
-   config?: BetterCoreProviderConfig & BetterComponentsProviderConfig;
+   config?: BetterComponentsProviderConfig;
 };
 
 function BetterComponentsProvider({ config, ...props }: BetterComponentsProviderProps) {
@@ -153,7 +155,7 @@ function BetterComponentsProvider({ config, ...props }: BetterComponentsProvider
       [config],
    );
 
-   const componentsConfig = useMemo<BetterComponentsProviderConfig>(
+   const componentsConfig = useMemo<BetterComponentsProviderInternalConfig>(
       () => ({
          app: config?.app,
       }),
