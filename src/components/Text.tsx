@@ -4,7 +4,7 @@ import { OmitProps, useTheme } from "react-better-core";
 
 import { ComponentStyle } from "../types/components";
 
-type TextProps = {} & OmitProps<NativeTextProps, "style"> & ComponentStyle<NativeTextStyle>;
+export type TextProps = {} & OmitProps<NativeTextProps, "style"> & ComponentStyle<NativeTextStyle>;
 
 type TextComponentType = {
    (props: TextProps): React.ReactElement;
