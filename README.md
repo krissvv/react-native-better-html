@@ -2,14 +2,14 @@
 
 A component library for react native that is as close to plane react-native as possible
 
-![NPM Version](https://img.shields.io/npm/v/react-native-better-components)
+![NPM Version](https://img.shields.io/npm/v/react-native-better-html-components)
 ![GitHub Repo stars](https://img.shields.io/github/stars/krissvv/react-native-better-components?style=flat)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/krissvv/react-native-better-components)
-![NPM Type Definitions](https://img.shields.io/npm/types/react-native-better-components)<br/>
+![NPM Type Definitions](https://img.shields.io/npm/types/react-native-better-html-components)<br/>
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/krissvv/react-native-better-components/document-deploy.yml)
 ![GitHub last commit](https://img.shields.io/github/last-commit/krissvv/react-native-better-components)
-![NPM Downloads](https://img.shields.io/npm/dm/react-native-better-components)<br/>
-![NPM License](https://img.shields.io/npm/l/react-native-better-components)<br/>
+![NPM Downloads](https://img.shields.io/npm/dm/react-native-better-html-components)<br/>
+![NPM License](https://img.shields.io/npm/l/react-native-better-html-components)<br/>
 ![React dep](https://img.shields.io/badge/React-v19-9b6499)
 
 # 🚧 Work in progress 🚧
