@@ -62,6 +62,7 @@ import Animate, { type AnimateViewProps, type AnimateTextProps } from "./compone
 import ScreenHolder, { type ScreenHolderProps, type FooterProps } from "./components/ScreenHolder";
 import Image, { type ImageProps } from "./components/Image";
 import InputField, { type InputFieldProps } from "./components/InputField";
+import StatusBar, { type StatusBarProps } from "./components/StatusBar";
 
 export * from "./plugins";
 
@@ -112,4 +113,6 @@ export {
    ImageProps,
    InputField,
    InputFieldProps,
+   StatusBar,
+   StatusBarProps,
 };
