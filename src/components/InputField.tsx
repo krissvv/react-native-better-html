@@ -73,8 +73,11 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
       const [internalValue, setInternalValue] = useState(value?.toString() || defaultValue || "");
       const [isFocused, setIsFocused] = useBooleanState();
 
+      const borderWidth = 1;
+      const lineHeight = 20;
       const paddingHorizontal = theme.styles.space;
       const paddingVertical = (theme.styles.space + theme.styles.gap) / 2;
+      const height = borderWidth + paddingVertical + lineHeight + paddingVertical + borderWidth;
 
       const onFocusElement = useCallback((event: FocusEvent) => {
          setIsFocused.setTrue();
@@ -96,12 +99,12 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
          () => ({
             flex: 1,
             fontSize: 16,
-            lineHeight: 20,
+            lineHeight,
             color: theme.colors.textPrimary,
             paddingHorizontal,
             paddingVertical,
          }),
-         [theme.colors, paddingHorizontal, paddingVertical],
+         [theme.colors, lineHeight, paddingHorizontal, paddingVertical],
       );
 
       useEffect(() => {
@@ -124,14 +127,14 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
             : lightenColor(theme.colors.backgroundContent, 0.1);
 
       return (
-         <View isRow position="relative" alignItems="center">
+         <View isRow position="relative" alignItems="center" height={height}>
             {prefix && (
                <View
                   isRow
                   height="100%"
                   backgroundColor={prefixSuffixBackgroundColor}
                   alignItems="center"
-                  borderWidth={1}
+                  borderWidth={borderWidth}
                   borderRightWidth={0}
                   borderTopLeftRadius={theme.styles.borderRadius}
                   borderBottomLeftRadius={theme.styles.borderRadius}
@@ -149,7 +152,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
                borderBottomLeftRadius={prefix ? 0 : theme.styles.borderRadius}
                borderTopRightRadius={suffix ? 0 : theme.styles.borderRadius}
                borderBottomRightRadius={suffix ? 0 : theme.styles.borderRadius}
-               borderWidth={1}
+               borderWidth={borderWidth}
                initialBorderColor={theme.colors.border}
                animateBorderColor={isFocused ? theme.colors.primary : theme.colors.border}
                overflow="hidden"
@@ -182,7 +185,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
                   height="100%"
                   backgroundColor={prefixSuffixBackgroundColor}
                   alignItems="center"
-                  borderWidth={1}
+                  borderWidth={borderWidth}
                   borderLeftWidth={0}
                   borderTopRightRadius={theme.styles.borderRadius}
                   borderBottomRightRadius={theme.styles.borderRadius}
