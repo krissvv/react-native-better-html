@@ -62,6 +62,10 @@ export type InputFieldProps = {
    /** @default 20 */
    lineHeight?: number;
    textAlign?: React.ComponentProps<typeof TextInput>["textAlign"];
+   /** @default false */
+   required?: boolean;
+   /** @default false */
+   disabled?: boolean;
    onFocus?: (event: FocusEvent) => void;
    onBlur?: (event: FocusEvent) => void;
    onChange?: (text: string) => void;
@@ -113,6 +117,8 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
          fontWeight = 400,
          lineHeight = 20,
          textAlign,
+         required,
+         disabled,
          paddingHorizontal,
          paddingVertical,
          onFocus,
@@ -188,11 +194,20 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
             : lightenColor(theme.colors.backgroundContent, 0.1);
 
       return (
-         <View flex={1} gap={theme.styles.gap / 3}>
+         <Animate.View
+            flex={1}
+            gap={theme.styles.gap / 3}
+            initialOpacity={1}
+            animateOpacity={disabled ? 0.6 : 1}
+         >
             {label && (
-               <Text fontSize={14} color={theme.colors.textSecondary}>
-                  {label}
-               </Text>
+               <View isRow width="100%" alignItems="center" gap={2}>
+                  <Text fontSize={14} color={theme.colors.textSecondary}>
+                     {label}
+                  </Text>
+
+                  {required && <Text color={theme.colors.error}>*</Text>}
+               </View>
             )}
 
             <View isRow position="relative" alignItems="center" flex={1} height={readyHeight}>
@@ -240,8 +255,9 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                      enterKeyHint={returnKeyLabel}
                      returnKeyType={returnKeyType}
                      onSubmitEditing={onPressEnter}
-                     readOnly={!editable}
+                     readOnly={!editable || disabled}
                      textAlign={textAlign}
+                     editable={!disabled}
                      keyboardAppearance={keyboardAppearance}
                      keyboardType={keyboardType}
                      cursorColor={theme.colors.primary}
@@ -297,7 +313,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                   {errorMessage}
                </Animate.Text>
             )}
-         </View>
+         </Animate.View>
       );
    },
 ) as any;

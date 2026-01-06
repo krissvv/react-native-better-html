@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { Dimensions, Keyboard, KeyboardEvent } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, Keyboard, KeyboardEvent, TextInput } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useBooleanState, useTheme } from "react-better-core";
+import { PartialRecord, useBooleanState, useTheme } from "react-better-core";
 
 import { animateProps, animateTransitionProps, cssProps } from "../constants/css";
 
-import { ComponentStyle } from "../types/components";
+import { ComponentPropWithRef, ComponentStyle } from "../types/components";
+
+import { InputFieldProps, InputFieldRef } from "../components/InputField";
 
 export function useDevice() {
    const theme = useTheme();
@@ -113,4 +115,155 @@ export function useComponentPropsGrouper<Props extends object = {}>(
          restProps,
       };
    }, [props, prefix]);
+}
+
+type FormFieldValue = string | number | boolean;
+
+export function useForm<
+   FormFields extends Record<string | number, FormFieldValue | FormFieldValue[] | undefined>,
+>(options: {
+   defaultValues: FormFields;
+   requiredFields?: (keyof FormFields)[];
+   additional?: {
+      /** @default "done" */
+      lastInputFieldReturnKeyLabel?: React.ComponentProps<typeof TextInput>["enterKeyHint"];
+   };
+   onSubmit?: (values: FormFields) => void | Promise<void>;
+   validate?: (values: FormFields) => PartialRecord<keyof FormFields, string>;
+}) {
+   const { defaultValues, requiredFields, additional, onSubmit, validate } = options;
+
+   const inputFieldRefs = useRef<Record<keyof FormFields, InputFieldRef | undefined>>(
+      {} as Record<keyof FormFields, InputFieldRef | undefined>,
+   );
+
+   const [values, setValues] = useState<FormFields>(defaultValues);
+   const [errors, setErrors] = useState<PartialRecord<keyof FormFields, string>>({});
+   const [isSubmitting, setIsSubmitting] = useBooleanState();
+
+   const numberOfInputFields = Object.keys(defaultValues).length;
+
+   const setFieldValue = useCallback(
+      <FieldName extends keyof FormFields>(field: FieldName, value: FormFields[FieldName] | undefined) => {
+         setValues((oldValue) => ({
+            ...oldValue,
+            [field]: value,
+         }));
+
+         setErrors((oldValue) => ({
+            ...oldValue,
+            [field]: undefined,
+         }));
+      },
+      [],
+   );
+   const setFieldsValue = useCallback((values: Partial<FormFields>) => {
+      setValues((oldValue) => ({
+         ...oldValue,
+         ...values,
+      }));
+
+      setErrors((oldValue) => {
+         const newErrors: typeof oldValue = {};
+
+         for (const key in values) newErrors[key] = undefined;
+
+         return newErrors;
+      });
+   }, []);
+   const focusField = useCallback((field: keyof FormFields) => {
+      inputFieldRefs.current[field]?.focus();
+   }, []);
+   const validateForm = useCallback(() => {
+      const validationErrors = validate?.(values) || {};
+      setErrors(validationErrors);
+
+      return validationErrors;
+   }, [validate, values]);
+   const onSubmitFunction = useCallback(
+      async (event?: React.FormEvent<HTMLFormElement>) => {
+         event?.preventDefault();
+         setIsSubmitting.setTrue();
+
+         try {
+            const validationErrors = validateForm();
+
+            if (Object.keys(validationErrors).length === 0) {
+               await onSubmit?.(values);
+            } else {
+               const firstErrorField = Object.keys(validationErrors)[0] as keyof FormFields;
+               focusField(firstErrorField);
+            }
+         } finally {
+            setIsSubmitting.setFalse();
+         }
+      },
+      [values, validateForm, onSubmit, focusField],
+   );
+   const getInputFieldProps = useCallback(
+      <FieldName extends keyof FormFields>(
+         field: FieldName,
+      ): ComponentPropWithRef<InputFieldRef, InputFieldProps> => {
+         const thisInputFieldIndex = Object.keys(values).findIndex((key) => key === field);
+         const isLastInputField = thisInputFieldIndex === numberOfInputFields - 1;
+
+         return {
+            required: requiredFields?.includes(field),
+            value: values[field]?.toString() ?? "",
+            errorMessage: errors[field],
+            returnKeyLabel: isLastInputField ? additional?.lastInputFieldReturnKeyLabel ?? "done" : "next",
+            onPressEnter: () => {
+               if (isLastInputField) onSubmitFunction();
+               else inputFieldRefs.current[Object.keys(values)[thisInputFieldIndex + 1]]?.focus();
+            },
+            onChange: (value) => {
+               setFieldValue(field, value as FormFields[FieldName]);
+            },
+            ref: (element) => {
+               if (!element) return;
+
+               inputFieldRefs.current[field] = element;
+            },
+         };
+      },
+      [values, setFieldValue, errors, requiredFields, additional, onSubmitFunction],
+   );
+   const reset = useCallback(() => {
+      setValues(defaultValues);
+      setErrors({});
+   }, [defaultValues]);
+
+   const isDirty = useMemo<boolean>(
+      () => Object.keys(defaultValues).some((key) => defaultValues[key] !== values[key]),
+      [defaultValues, values],
+   );
+   const isValid = useMemo<boolean>(() => {
+      const validationErrors = validate?.(values) || {};
+
+      return Object.keys(validationErrors).length === 0;
+   }, [validate, values]);
+   const canSubmit = useMemo<boolean>(() => {
+      const requiredFieldsHaveValues =
+         requiredFields?.every((field) => values[field] !== undefined && values[field] !== "") ?? true;
+
+      return isValid && requiredFieldsHaveValues;
+   }, [isValid, requiredFields]);
+
+   return {
+      values,
+      errors,
+      isSubmitting,
+      setFieldValue,
+      setFieldsValue,
+      getInputFieldProps,
+      focusField,
+      inputFieldRefs: inputFieldRefs.current,
+      validate: validateForm,
+      onSubmit: onSubmitFunction,
+      reset,
+      requiredFields,
+      isDirty,
+      isValid,
+      canSubmit,
+   };
 }

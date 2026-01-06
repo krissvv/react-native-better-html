@@ -1,12 +1,34 @@
 import { memo, useState } from "react";
 import { Stack } from "expo-router";
 
-import { Animate, Button, Image, InputField, ScreenHolder, Text, useTheme, View } from "../../src/index";
+import {
+   Animate,
+   Button,
+   Image,
+   InputField,
+   ScreenHolder,
+   Text,
+   useForm,
+   useTheme,
+   View,
+} from "../../src/index";
 
 function Index() {
    const theme = useTheme();
 
    const [value, setValue] = useState<string>("");
+
+   const form = useForm({
+      defaultValues: {
+         first: "",
+         second: "",
+         third: "",
+      },
+      requiredFields: ["first"],
+      onSubmit: (values) => {
+         console.log(values);
+      },
+   });
 
    return (
       <ScreenHolder
@@ -78,6 +100,10 @@ function Index() {
                prefix="+359"
             />
             <InputField placeholder="Hello" suffix="EUR" />
+
+            <InputField label="First" placeholder="First" {...form.getInputFieldProps("first")} />
+            <InputField label="Second" placeholder="Second" {...form.getInputFieldProps("second")} />
+            <InputField label="Third" placeholder="Third" {...form.getInputFieldProps("third")} />
          </View>
       </ScreenHolder>
    );
