@@ -1,6 +1,6 @@
 {
    "name": "react-native-better-html",
-   "version": "1.0.9",
+   "version": "1.0.10",
    "description": "A component library for react native that is as close to plane react-native as possible",
    "main": "dist/index.js",
    "files": [

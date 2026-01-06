@@ -1,7 +1,7 @@
 import { memo, useState } from "react";
+import { Stack } from "expo-router";
 
 import { Animate, Button, Image, InputField, ScreenHolder, Text, useTheme, View } from "../../src/index";
-import { Stack } from "expo-router";
 
 function Index() {
    const theme = useTheme();
@@ -53,6 +53,13 @@ function Index() {
             <Image name="logo" />
             <Image.profileImage letters="Kv" />
             <Image.profileImage name="logo" />
+
+            <View isRow gap={theme.styles.gap}>
+               <InputField.code />
+               <InputField.code />
+               <InputField.code />
+               <InputField.code />
+            </View>
 
             <InputField placeholder="Hello" value={value} onChange={setValue} />
             <InputField.email />

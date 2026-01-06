@@ -1,5 +1,21 @@
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from "react";
-import { FocusEvent, TextInput, TextStyle } from "react-native";
+import {
+   forwardRef,
+   memo,
+   useCallback,
+   useEffect,
+   useImperativeHandle,
+   useMemo,
+   useRef,
+   useState,
+} from "react";
+import {
+   FocusEvent,
+   NativeSyntheticEvent,
+   NativeTouchEvent,
+   TextInput,
+   TextInputSubmitEditingEvent,
+   TextStyle,
+} from "react-native";
 import {
    darkenColor,
    lightenColor,
@@ -8,7 +24,7 @@ import {
    useTheme,
 } from "react-better-core";
 
-import { ComponentPropWithRef } from "../types/components";
+import { ComponentPaddingProps, ComponentPropWithRef } from "../types/components";
 
 import View from "./View";
 import Text from "./Text";
@@ -32,20 +48,33 @@ export type InputFieldProps = {
    keyboardType?: React.ComponentProps<typeof TextInput>["keyboardType"];
    /** @default false */
    secureTextEntry?: boolean;
+   returnKeyLabel?: React.ComponentProps<typeof TextInput>["enterKeyHint"];
+   returnKeyType?: React.ComponentProps<typeof TextInput>["returnKeyType"];
+   height?: number;
+   /** @default 16 */
+   fontSize?: number;
+   /** @default 400 */
+   fontWeight?: TextStyle["fontWeight"];
+   /** @default 20 */
+   lineHeight?: number;
+   textAlign?: React.ComponentProps<typeof TextInput>["textAlign"];
    onFocus?: (event: FocusEvent) => void;
    onBlur?: (event: FocusEvent) => void;
    onChange?: (text: string) => void;
-};
+   onPress?: (event: NativeSyntheticEvent<NativeTouchEvent>) => void;
+   onPressEnter?: (event: TextInputSubmitEditingEvent) => void;
+} & Pick<ComponentPaddingProps, "paddingHorizontal" | "paddingVertical">;
 
-export type InputFieldRef = {};
+export type InputFieldRef = TextInput;
 
 type InputFieldComponentType = {
-   (props: ComponentPropWithRef<InputFieldRef, InputFieldProps>): React.ReactElement;
-   email: (props: ComponentPropWithRef<InputFieldRef, InputFieldProps>) => React.ReactElement;
-   password: (props: ComponentPropWithRef<InputFieldRef, InputFieldProps>) => React.ReactElement;
+   (props: ComponentPropWithRef<TextInput, InputFieldProps>): React.ReactElement;
+   email: (props: ComponentPropWithRef<TextInput, InputFieldProps>) => React.ReactElement;
+   password: (props: ComponentPropWithRef<TextInput, InputFieldProps>) => React.ReactElement;
+   code: (props: ComponentPropWithRef<TextInput, InputFieldProps>) => React.ReactElement;
 };
 
-const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, InputFieldProps>(
+const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, InputFieldProps>(
    (
       {
          placeholder,
@@ -61,23 +90,38 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
          keyboardAppearance = "default",
          keyboardType,
          secureTextEntry,
+         returnKeyLabel,
+         returnKeyType,
+         height,
+         fontSize = 16,
+         fontWeight = 400,
+         lineHeight = 20,
+         textAlign,
+         paddingHorizontal,
+         paddingVertical,
          onFocus,
          onBlur,
          onChange,
+         onPress,
+         onPressEnter,
       },
       ref,
    ) => {
       const theme = useTheme();
       const { colorTheme } = useBetterCoreContext();
 
+      const textInputRef = useRef<TextInput>(null);
+
       const [internalValue, setInternalValue] = useState(value?.toString() || defaultValue || "");
       const [isFocused, setIsFocused] = useBooleanState();
 
       const borderWidth = 1;
-      const lineHeight = 20;
-      const paddingHorizontal = theme.styles.space;
-      const paddingVertical = (theme.styles.space + theme.styles.gap) / 2;
-      const height = borderWidth + paddingVertical + lineHeight + paddingVertical + borderWidth;
+      const readyPaddingHorizontal = paddingHorizontal ?? theme.styles.space;
+      const readyPaddingVertical = paddingVertical
+         ? parseFloat(paddingVertical.toString())
+         : (theme.styles.space + theme.styles.gap) / 2;
+      const readyHeight =
+         height ?? borderWidth + readyPaddingVertical + lineHeight + readyPaddingVertical + borderWidth;
 
       const onFocusElement = useCallback((event: FocusEvent) => {
          setIsFocused.setTrue();
@@ -98,13 +142,14 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
       const textInputStyle = useMemo<TextStyle>(
          () => ({
             flex: 1,
-            fontSize: 16,
+            fontSize,
+            fontWeight,
             lineHeight,
             color: theme.colors.textPrimary,
-            paddingHorizontal,
-            paddingVertical,
+            paddingHorizontal: readyPaddingHorizontal,
+            paddingVertical: readyPaddingVertical,
          }),
-         [theme.colors, lineHeight, paddingHorizontal, paddingVertical],
+         [theme.colors, fontSize, fontWeight, lineHeight, readyPaddingHorizontal, readyPaddingVertical],
       );
 
       useEffect(() => {
@@ -115,8 +160,8 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
 
       useImperativeHandle(
          ref,
-         (): InputFieldRef => {
-            return {};
+         (): TextInput => {
+            return textInputRef.current!;
          },
          [],
       );
@@ -127,7 +172,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
             : lightenColor(theme.colors.backgroundContent, 0.1);
 
       return (
-         <View isRow position="relative" alignItems="center" height={height}>
+         <View isRow position="relative" alignItems="center" flex={1} height={readyHeight}>
             {prefix && (
                <View
                   isRow
@@ -139,7 +184,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
                   borderTopLeftRadius={theme.styles.borderRadius}
                   borderBottomLeftRadius={theme.styles.borderRadius}
                   borderColor={theme.colors.border}
-                  paddingHorizontal={paddingHorizontal}
+                  paddingHorizontal={readyPaddingHorizontal}
                >
                   <Text fontWeight={700}>{prefix}</Text>
                </View>
@@ -167,7 +212,11 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
                   autoFocus={autoFocus}
                   placeholder={placeholder}
                   placeholderTextColor={theme.colors.textSecondary + "80"}
+                  enterKeyHint={returnKeyLabel}
+                  returnKeyType={returnKeyType}
+                  onSubmitEditing={onPressEnter}
                   readOnly={!editable}
+                  textAlign={textAlign}
                   keyboardAppearance={keyboardAppearance}
                   keyboardType={keyboardType}
                   cursorColor={theme.colors.primary}
@@ -176,6 +225,8 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
                   onFocus={onFocusElement}
                   onBlur={onBlurElement}
                   onChangeText={onChangeText}
+                  onPress={onPress}
+                  ref={textInputRef}
                />
             </Animate.View>
 
@@ -190,7 +241,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<InputFieldRef, I
                   borderTopRightRadius={theme.styles.borderRadius}
                   borderBottomRightRadius={theme.styles.borderRadius}
                   borderColor={theme.colors.border}
-                  paddingHorizontal={paddingHorizontal}
+                  paddingHorizontal={readyPaddingHorizontal}
                >
                   <Text fontWeight={700}>{suffix}</Text>
                </View>
@@ -228,12 +279,30 @@ InputFieldComponent.password = forwardRef(function Password(props, ref) {
    );
 }) as InputFieldComponentType[`password`];
 
+InputFieldComponent.code = forwardRef(function Password(props, ref) {
+   const theme = useTheme();
+
+   return (
+      <InputFieldComponent
+         fontSize={42}
+         fontWeight={900}
+         lineHeight={50}
+         paddingVertical={theme.styles.space * 2}
+         textAlign="center"
+         {...props}
+         ref={ref}
+      />
+   );
+}) as InputFieldComponentType[`code`];
+
 const InputField = memo(InputFieldComponent) as any as typeof InputFieldComponent & {
    email: typeof InputFieldComponent.email;
    password: typeof InputFieldComponent.password;
+   code: typeof InputFieldComponent.code;
 };
 
 InputField.email = InputFieldComponent.email;
 InputField.password = InputFieldComponent.password;
+InputField.code = InputFieldComponent.code;
 
 export default InputField;
