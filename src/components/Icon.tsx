@@ -8,9 +8,11 @@ import { pressStrength } from "../utils/variableFunctions";
 
 import View, { ViewProps } from "./View";
 
+export type IconNameIOS = React.ComponentProps<typeof SymbolView>["name"];
+
 export type IconProps = {
    name: IconName | AnyOtherString;
-   nameIOS?: React.ComponentProps<typeof SymbolView>["name"];
+   nameIOS?: IconNameIOS;
    /** @default 16 */
    size?: number;
    color?: string;

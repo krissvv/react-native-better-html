@@ -62,9 +62,11 @@ import Loader, { type LoaderProps, type LoaderSize } from "./components/Loader";
 import Animate, { type AnimateViewProps, type AnimateTextProps } from "./components/Animate";
 import ScreenHolder, { type ScreenHolderProps, type FooterProps } from "./components/ScreenHolder";
 import Image, { type ImageProps } from "./components/Image";
-import Icon, { type IconProps } from "./components/Icon";
+import Icon, { type IconProps, type IconNameIOS } from "./components/Icon";
 import InputField, { type InputFieldProps, type InputFieldRef } from "./components/InputField";
+import Switch, { type SwitchProps } from "./components/Switch";
 import StatusBar, { type StatusBarProps } from "./components/StatusBar";
+import ListItem, { type ListItemProps } from "./components/ListItem";
 
 export * from "./plugins";
 
@@ -118,9 +120,14 @@ export {
    ImageProps,
    Icon,
    IconProps,
+   IconNameIOS,
    InputField,
    InputFieldProps,
    InputFieldRef,
+   Switch,
+   SwitchProps,
    StatusBar,
    StatusBarProps,
+   ListItem,
+   ListItemProps,
 };

@@ -8,6 +8,8 @@ import { animateProps, animateTransitionProps, cssProps } from "../constants/css
 import { ComponentPropWithRef, ComponentStyle } from "../types/components";
 
 import { InputFieldProps, InputFieldRef } from "../components/InputField";
+import { SwitchProps } from "../components/Switch";
+import { ListItemProps } from "../components/ListItem";
 
 export function useDevice() {
    const theme = useTheme();
@@ -229,6 +231,24 @@ export function useForm<
       },
       [values, setFieldValue, errors, requiredFields, additional, onSubmitFunction],
    );
+   const getSwitchProps = useCallback(
+      <FieldName extends keyof FormFields>(field: FieldName, insideListItem?: boolean): SwitchProps => {
+         return insideListItem
+            ? ({
+                 switchIsEnabled: values[field] as boolean,
+                 switchOnChange: (value) => {
+                    setFieldValue(field, value as FormFields[FieldName]);
+                 },
+              } as ListItemProps as any)
+            : {
+                 isEnabled: values[field] as boolean,
+                 onChange: (value) => {
+                    setFieldValue(field, value as FormFields[FieldName]);
+                 },
+              };
+      },
+      [values, setFieldValue],
+   );
    const reset = useCallback(() => {
       setValues(defaultValues);
       setErrors({});
@@ -257,6 +277,7 @@ export function useForm<
       setFieldValue,
       setFieldsValue,
       getInputFieldProps,
+      getSwitchProps,
       focusField,
       inputFieldRefs: inputFieldRefs.current,
       validate: validateForm,

@@ -7,7 +7,9 @@ import {
    Icon,
    Image,
    InputField,
+   ListItem,
    ScreenHolder,
+   Switch,
    Text,
    useForm,
    useTheme,
@@ -25,6 +27,7 @@ function Index() {
          second: "",
          third: "",
          date: "",
+         switch: false,
       },
       requiredFields: ["first"],
       onSubmit: (values) => {
@@ -34,20 +37,20 @@ function Index() {
 
    return (
       <ScreenHolder
-         footer={
-            <ScreenHolder.footer
-               insideBottomSafeArea
-               // withNoHeader
-            >
-               <View gap={theme.styles.gap}>
-                  <Button text="Hello" onPress={() => {}} />
-                  <Button.secondary text="Hello" onPress={() => {}} />
-                  <Button.destructive text="Hello" onPress={() => {}} />
-                  <Button.text text="Hello" isSmall="center" onPress={() => {}} />
-               </View>
-            </ScreenHolder.footer>
-         }
-         // insideBottomSafeArea
+         // footer={
+         //    <ScreenHolder.footer
+         //       insideBottomSafeArea
+         //       // withNoHeader
+         //    >
+         //       <View gap={theme.styles.gap}>
+         //          <Button text="Hello" onPress={() => {}} />
+         //          <Button.secondary text="Hello" onPress={() => {}} />
+         //          <Button.destructive text="Hello" onPress={() => {}} />
+         //          <Button.text text="Hello" isSmall="center" onPress={() => {}} />
+         //       </View>
+         //    </ScreenHolder.footer>
+         // }
+         insideBottomSafeArea
          // bottomSpace={theme.styles.space * 2}
          // keepFooterOnKeyboardOpened
          // withNoHeader
@@ -65,6 +68,26 @@ function Index() {
             <View.box>
                <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam, officiis.</Text>
             </View.box>
+
+            <Switch {...form.getSwitchProps("switch")} />
+
+            <ListItem
+               title="awdawd"
+               description="aiwdv aywjdv ajwyvd"
+               icon="XMark"
+               rightElement="arrow"
+               rightArrowValue="awdaw"
+               insideScreenHolder
+               onPress={() => {}}
+            />
+
+            <ListItem
+               title="awdawd"
+               description="aiwdv aywjdv ajwyvd"
+               icon="XMark"
+               rightElement="switch"
+               insideScreenHolder
+            />
 
             <View isRow>
                <Animate.View

@@ -59,7 +59,6 @@ export type InputFieldProps = {
    autoCapitalize?: React.ComponentProps<typeof TextInput>["autoCapitalize"];
    autoComplete?: React.ComponentProps<typeof TextInput>["autoComplete"];
    autoCorrect?: React.ComponentProps<typeof TextInput>["autoCorrect"];
-   /** @default "default" */
    keyboardAppearance?: React.ComponentProps<typeof TextInput>["keyboardAppearance"];
    keyboardType?: React.ComponentProps<typeof TextInput>["keyboardType"];
    /** @default false */
@@ -137,7 +136,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
          autoCapitalize,
          autoComplete,
          autoCorrect,
-         keyboardAppearance = "default",
+         keyboardAppearance,
          keyboardType,
          secureTextEntry,
          returnKeyLabel,
@@ -388,6 +387,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                         mode={type}
                         display={iOSDateTimeFullSize ? (type === "date" ? "inline" : "spinner") : "default"}
                         accentColor={theme.colors.primary}
+                        themeVariant={colorTheme === "dark" ? "dark" : "light"}
                         style={rnDateTimePickerStyle}
                         onChange={onChangeRNDateTimePicker}
                      />
@@ -458,11 +458,12 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                            readOnly={!editable || disabled || type === "date" || type === "time"}
                            textAlign={textAlign}
                            editable={!disabled}
-                           keyboardAppearance={keyboardAppearance}
+                           keyboardAppearance={keyboardAppearance ?? colorTheme === "dark" ? "dark" : "light"}
                            keyboardType={keyboardType}
                            cursorColor={theme.colors.primary}
                            selectionColor={theme.colors.primary}
                            secureTextEntry={secureTextEntry}
+                           // clearButtonMode={clearButtonMode}
                            onFocus={onFocusElement}
                            onBlur={onBlurElement}
                            onChangeText={onChangeText}
