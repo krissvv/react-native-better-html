@@ -175,7 +175,7 @@ ButtonComponent.secondary = function Secondary(props) {
          borderWidth={1}
          borderColor={theme.colors.border}
          textColor={theme.colors.textPrimary}
-         pressStrength={pressStrength().z05}
+         pressStrength={pressStrength().p05}
          animateOpacity={props.disabled ? 0.4 : 1}
          {...props}
       />

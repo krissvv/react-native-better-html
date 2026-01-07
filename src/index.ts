@@ -62,6 +62,7 @@ import Loader, { type LoaderProps, type LoaderSize } from "./components/Loader";
 import Animate, { type AnimateViewProps, type AnimateTextProps } from "./components/Animate";
 import ScreenHolder, { type ScreenHolderProps, type FooterProps } from "./components/ScreenHolder";
 import Image, { type ImageProps } from "./components/Image";
+import Icon, { type IconProps } from "./components/Icon";
 import InputField, { type InputFieldProps, type InputFieldRef } from "./components/InputField";
 import StatusBar, { type StatusBarProps } from "./components/StatusBar";
 
@@ -114,6 +115,8 @@ export {
    FooterProps,
    Image,
    ImageProps,
+   Icon,
+   IconProps,
    InputField,
    InputFieldProps,
    InputFieldRef,

@@ -30,13 +30,13 @@ export const checkBetterComponentsContextValue = (
    return value !== undefined;
 };
 
-export const pressStrength = (): Record<"z05" | "z1" | "z2" | "z3", number> => {
+export const pressStrength = (): Record<"p05" | "p1" | "p2" | "p3", number> => {
    if (!checkBetterCoreContextValue(externalBetterCoreContextValue, "pressStrength")) return undefined as any;
 
    return {
-      z05: externalBetterCoreContextValue.colorTheme === "dark" ? 0.85 : 0.95,
-      z1: externalBetterCoreContextValue.colorTheme === "dark" ? 0.6 : 0.8,
-      z2: externalBetterCoreContextValue.colorTheme === "dark" ? 0.5 : 0.7,
-      z3: externalBetterCoreContextValue.colorTheme === "dark" ? 0.4 : 0.6,
+      p05: externalBetterCoreContextValue.colorTheme === "dark" ? 0.85 : 0.95,
+      p1: externalBetterCoreContextValue.colorTheme === "dark" ? 0.6 : 0.8,
+      p2: externalBetterCoreContextValue.colorTheme === "dark" ? 0.5 : 0.7,
+      p3: externalBetterCoreContextValue.colorTheme === "dark" ? 0.4 : 0.6,
    };
 };

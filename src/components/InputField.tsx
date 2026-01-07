@@ -35,6 +35,7 @@ import { ComponentMarginProps, ComponentPaddingProps, ComponentPropWithRef } fro
 import View from "./View";
 import Text from "./Text";
 import Animate from "./Animate";
+import Icon, { IconProps } from "./Icon";
 
 export type InputFieldProps = {
    flex?: ViewStyle["flex"];
@@ -82,6 +83,10 @@ export type InputFieldProps = {
    multiline?: boolean;
    /** @default 2 */
    numberOfLines?: number;
+   leftIcon?: IconProps["name"];
+   leftIconIOS?: IconProps["nameIOS"];
+   rightIcon?: IconProps["name"];
+   rightIconIOS?: IconProps["nameIOS"];
    onFocus?: (event: FocusEvent) => void;
    onBlur?: (event: FocusEvent) => void;
    onChange?: (text: string) => void;
@@ -98,6 +103,7 @@ type InputFieldComponentType = {
    (props: ComponentPropWithRef<TextInput, InputFieldProps>): React.ReactElement;
    email: (props: ComponentPropWithRef<TextInput, InputFieldProps>) => React.ReactElement;
    password: (props: ComponentPropWithRef<TextInput, InputFieldProps>) => React.ReactElement;
+   search: (props: ComponentPropWithRef<TextInput, InputFieldProps>) => React.ReactElement;
    code: (
       props: ComponentPropWithRef<
          TextInput,
@@ -144,6 +150,10 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
          maxLength,
          multiline,
          numberOfLines = 2,
+         leftIcon,
+         leftIconIOS,
+         rightIcon,
+         rightIconIOS,
          paddingHorizontal,
          paddingVertical,
          onFocus,
@@ -168,6 +178,8 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
 
       const isIOSDateTime = Platform.OS === "ios" && (type === "date" || type === "time");
 
+      const iconSize = 16;
+      const iconSideSpace = theme.styles.space;
       const borderWidth = 1;
       const readyPaddingHorizontal = paddingHorizontal ?? theme.styles.space;
       const readyPaddingVertical = paddingVertical
@@ -242,10 +254,23 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
             fontWeight,
             lineHeight,
             color: theme.colors.textPrimary,
+            paddingLeft: leftIcon ? iconSideSpace + iconSize + iconSideSpace : undefined,
+            paddingRight: rightIcon ? iconSideSpace + iconSize + iconSideSpace : undefined,
             paddingHorizontal: readyPaddingHorizontal,
             paddingVertical: readyPaddingVertical,
          }),
-         [theme.colors, fontSize, fontWeight, lineHeight, readyPaddingHorizontal, readyPaddingVertical],
+         [
+            theme.colors,
+            fontSize,
+            fontWeight,
+            lineHeight,
+            readyPaddingHorizontal,
+            readyPaddingVertical,
+            iconSideSpace,
+            iconSize,
+            leftIcon,
+            rightIcon,
+         ],
       );
       const rnDateTimePickerStyle = useMemo<ViewStyle>(
          () => ({
@@ -380,7 +405,9 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                      }
                   >
                      <Animate.View
+                        position="relative"
                         flex={1}
+                        justifyContent="center"
                         backgroundColor={theme.colors.backgroundContent}
                         borderTopLeftRadius={prefix ? 0 : theme.styles.borderRadius}
                         borderBottomLeftRadius={prefix ? 0 : theme.styles.borderRadius}
@@ -397,6 +424,17 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                         }
                         overflow="hidden"
                      >
+                        {leftIcon && (
+                           <Icon
+                              position="absolute"
+                              left={iconSideSpace}
+                              name={leftIcon}
+                              nameIOS={leftIconIOS}
+                              size={iconSize}
+                              pointerEvents="box-none"
+                           />
+                        )}
+
                         <TextInput
                            style={textInputStyle}
                            value={internalValue}
@@ -427,6 +465,17 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                            onPress={withPressInputField ? onPressInputField : undefined}
                            ref={textInputRef}
                         />
+
+                        {rightIcon && (
+                           <Icon
+                              position="absolute"
+                              right={iconSideSpace}
+                              name={rightIcon}
+                              nameIOS={rightIconIOS}
+                              size={iconSize}
+                              pointerEvents="box-none"
+                           />
+                        )}
                      </Animate.View>
                   </View>
                )}
@@ -519,6 +568,10 @@ InputFieldComponent.password = forwardRef(function Password(props, ref) {
    );
 }) as InputFieldComponentType[`password`];
 
+InputFieldComponent.search = forwardRef(function Search(props, ref) {
+   return <InputFieldComponent placeholder="Search..." leftIcon="magnifyingGlass" {...props} ref={ref} />;
+}) as InputFieldComponentType[`search`];
+
 InputFieldComponent.code = forwardRef(function Password({ isSmall, ...props }, ref) {
    const theme = useTheme();
 
@@ -540,11 +593,13 @@ InputFieldComponent.code = forwardRef(function Password({ isSmall, ...props }, r
 const InputField = memo(InputFieldComponent) as any as typeof InputFieldComponent & {
    email: typeof InputFieldComponent.email;
    password: typeof InputFieldComponent.password;
+   search: typeof InputFieldComponent.search;
    code: typeof InputFieldComponent.code;
 };
 
 InputField.email = InputFieldComponent.email;
 InputField.password = InputFieldComponent.password;
+InputField.search = InputFieldComponent.search;
 InputField.code = InputFieldComponent.code;
 
 export default InputField;

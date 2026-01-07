@@ -123,6 +123,7 @@ const ViewComponent: ViewComponentType = function View<Value>({
 
             return previousValue;
          }, {}),
+         width: props.width !== "100%" ? props.width : undefined,
       }),
       [style],
    );

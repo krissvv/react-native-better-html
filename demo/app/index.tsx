@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import {
    Animate,
    Button,
+   Icon,
    Image,
    InputField,
    ScreenHolder,
@@ -75,6 +76,8 @@ function Index() {
                />
             </View>
 
+            <Icon name="XMark" nameIOS="xmark" size={20} onPress={() => console.log("Awd")} />
+
             <Image name="logo" />
             <Image.profileImage letters="Kv" />
             <Image.profileImage name="logo" />
@@ -102,7 +105,11 @@ function Index() {
             />
             <InputField.email />
             <InputField.password />
+            <InputField.search />
             <InputField
+               leftIcon="XMark"
+               leftIconIOS="xmark"
+               rightIcon="check"
                label="Just that"
                infoMessage="lorem inpiusn auydev ajwdv ad"
                placeholder="Hello"
