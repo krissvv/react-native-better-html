@@ -1,11 +1,12 @@
-import { createContext, memo, useContext, useEffect, useMemo } from "react";
+import { createContext, memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
-   useBooleanState,
    DeepPartialRecord,
    BetterCoreProvider,
    BetterCoreProviderConfig,
    BetterCoreConfig,
    useBetterCoreContext,
+   OmitProps,
+   generateRandomString,
 } from "react-better-core";
 
 import { appConfig } from "../constants/app";
@@ -15,8 +16,13 @@ import { assets } from "../constants/assets";
 
 import { BetterComponentsConfig } from "../types/config";
 import { BetterComponentsPlugin, PluginName } from "../types/plugin";
+import { Alert } from "../types/alert";
+
+import AlertsHolder from "./alerts/AlertsHolder";
 
 export type BetterComponentsInternalConfig = BetterComponentsConfig & {
+   alerts: Alert[];
+   setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
    plugins: BetterComponentsPlugin[];
    componentsState: {};
 };
@@ -53,6 +59,33 @@ export const useBetterComponentsContextInternal = (): BetterComponentsInternalCo
    return context;
 };
 
+export const useAlertControls = () => {
+   const context = useContext(betterComponentsContext);
+
+   if (context === undefined)
+      throw new Error(
+         "`useAlertControls()` must be used within a `<BetterComponentsProvider>`. Make sure to add one at the root of your component tree.",
+      );
+
+   const createAlert = useCallback((alert: OmitProps<Alert, "id">): Alert => {
+      const readyAlert: Alert = {
+         id: generateRandomString(36),
+         ...alert,
+      };
+      context.setAlerts((oldValue) => [...oldValue, readyAlert]);
+
+      return readyAlert;
+   }, []);
+   const removeAlert = useCallback((alertId: string) => {
+      context.setAlerts((oldValue) => oldValue.filter((alert) => alert.id !== alertId));
+   }, []);
+
+   return {
+      createAlert,
+      removeAlert,
+   };
+};
+
 export const usePlugin = <T extends object>(
    pluginName: PluginName,
 ): BetterComponentsPlugin<T> | undefined => {
@@ -75,7 +108,15 @@ type BetterComponentsProviderInternalContentProps = {
 };
 
 function BetterComponentsProviderInternalContent({ children }: BetterComponentsProviderInternalContentProps) {
-   return <>{children}</>;
+   const alertsPlugin = usePlugin("alerts");
+
+   return (
+      <>
+         {children}
+
+         {alertsPlugin && <AlertsHolder />}
+      </>
+   );
 }
 
 type BetterComponentsProviderInternalConfig = DeepPartialRecord<BetterComponentsConfig>;
@@ -96,8 +137,7 @@ function BetterComponentsProviderInternal({
 }: BetterComponentsProviderInternalProps) {
    const betterCoreContext = useBetterCoreContext();
 
-   const [sideMenuIsCollapsed, setSideMenuIsCollapsed] = useBooleanState();
-   const [sideMenuIsOpenMobile, setSideMenuIsOpenMobile] = useBooleanState();
+   const [alerts, setAlerts] = useState<Alert[]>([]);
 
    const readyConfig = useMemo<BetterComponentsInternalConfig>(
       () => ({
@@ -105,14 +145,12 @@ function BetterComponentsProviderInternal({
             ...appConfig,
             ...config?.app,
          },
-         sideMenuIsCollapsed,
-         setSideMenuIsCollapsed,
-         sideMenuIsOpenMobile,
-         setSideMenuIsOpenMobile,
+         alerts,
+         setAlerts,
          plugins: plugins ?? [],
          componentsState: {},
       }),
-      [config, sideMenuIsCollapsed, sideMenuIsOpenMobile, plugins],
+      [config, alerts, plugins],
    );
 
    useEffect(() => {

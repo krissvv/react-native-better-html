@@ -14,13 +14,15 @@ export type ListItemProps = {
    iconIOS?: IconNameIOS;
    title?: string;
    description?: string;
+   descriptionSelectable?: boolean;
    rightElement?: "arrow" | "switch";
    /** @default theme.colors.backgroundBase */
    backgroundColor?: ViewProps["backgroundColor"];
    /** @default false */
    insideScreenHolder?: boolean;
    onPress?: () => void;
-   rightArrowValue?: string | number;
+   rightValue?: string | number;
+   rightValueSelectable?: boolean;
    switchIsEnabled?: boolean;
    switchOnChange?: (isEnabled: boolean) => void;
 };
@@ -30,11 +32,13 @@ function ListItem({
    iconIOS,
    title,
    description,
+   descriptionSelectable,
    rightElement,
    backgroundColor,
    insideScreenHolder,
    onPress,
-   rightArrowValue,
+   rightValue,
+   rightValueSelectable,
    switchIsEnabled,
    switchOnChange,
 }: ListItemProps) {
@@ -64,29 +68,31 @@ function ListItem({
                      </Text>
                   )}
 
-                  {description && <Text.body>{description}</Text.body>}
+                  {description && <Text.body selectable={descriptionSelectable}>{description}</Text.body>}
                </View>
             </View>
 
             {rightElement ? (
                <>
-                  {rightElement === "arrow" ? (
+                  {rightValue !== undefined || rightElement === "arrow" ? (
                      <View isRow alignItems="center" gap={theme.styles.gap / 2}>
-                        {rightArrowValue !== undefined && (
-                           <Text fontSize={14} fontWeight={700}>
-                              {rightArrowValue}
+                        {rightValue !== undefined && (
+                           <Text fontSize={14} fontWeight={700} selectable={rightValueSelectable}>
+                              {rightValue}
                            </Text>
                         )}
 
-                        <Icon
-                           name="chevronRight"
-                           nameIOS="chevron.right"
-                           color={
-                              rightArrowValue !== undefined
-                                 ? theme.colors.textPrimary
-                                 : theme.colors.textSecondary
-                           }
-                        />
+                        {rightElement === "arrow" && (
+                           <Icon
+                              name="chevronRight"
+                              nameIOS="chevron.right"
+                              color={
+                                 rightValue !== undefined
+                                    ? theme.colors.textPrimary
+                                    : theme.colors.textSecondary
+                              }
+                           />
+                        )}
                      </View>
                   ) : rightElement === "switch" ? (
                      <Switch isEnabled={switchIsEnabled} onChange={switchOnChange} />

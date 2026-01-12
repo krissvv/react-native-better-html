@@ -11,6 +11,7 @@ import {
    ScreenHolder,
    Switch,
    Text,
+   useAlertControls,
    useForm,
    useTheme,
    View,
@@ -18,6 +19,7 @@ import {
 
 function Index() {
    const theme = useTheme();
+   const alertControls = useAlertControls();
 
    const [value, setValue] = useState<string>("");
 
@@ -43,7 +45,7 @@ function Index() {
          //       // withNoHeader
          //    >
          //       <View gap={theme.styles.gap}>
-         //          <Button text="Hello" onPress={() => {}} />
+         //          <Button text="Hello" onPress={() => {}} icon="XMark" />
          //          <Button.secondary text="Hello" onPress={() => {}} />
          //          <Button.destructive text="Hello" onPress={() => {}} />
          //          <Button.text text="Hello" isSmall="center" onPress={() => {}} />
@@ -75,8 +77,9 @@ function Index() {
                title="awdawd"
                description="aiwdv aywjdv ajwyvd"
                icon="XMark"
+               iconIOS="xmark"
                rightElement="arrow"
-               rightArrowValue="awdaw"
+               rightValue="awdaw"
                insideScreenHolder
                onPress={() => {}}
             />
@@ -85,6 +88,7 @@ function Index() {
                title="awdawd"
                description="aiwdv aywjdv ajwyvd"
                icon="XMark"
+               iconIOS="xmark"
                rightElement="switch"
                insideScreenHolder
             />
@@ -96,6 +100,45 @@ function Index() {
                   backgroundColor={"red"}
                   initialBackgroundColor={"red"}
                   whileTapBackgroundColor={"blue"}
+               />
+            </View>
+
+            <View isRow>
+               <Button
+                  text="Inf Ale"
+                  onPress={() =>
+                     alertControls.createAlert({
+                        type: "info",
+                        message: "This is an info alert",
+                     })
+                  }
+               />
+               <Button
+                  text="Succ Ale"
+                  onPress={() =>
+                     alertControls.createAlert({
+                        type: "success",
+                        message: "This is an success alert",
+                     })
+                  }
+               />
+               <Button
+                  text="War Ale"
+                  onPress={() =>
+                     alertControls.createAlert({
+                        type: "warning",
+                        message: "This is an warning alert",
+                     })
+                  }
+               />
+               <Button
+                  text="Err Ale"
+                  onPress={() =>
+                     alertControls.createAlert({
+                        type: "error",
+                        message: "This is an error alert",
+                     })
+                  }
                />
             </View>
 

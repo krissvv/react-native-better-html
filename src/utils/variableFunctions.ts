@@ -1,7 +1,10 @@
-import { BetterCoreConfig } from "react-better-core";
+import { BetterCoreConfig, generateRandomString, OmitProps } from "react-better-core";
+
+import { Alert } from "../types/alert";
 
 import {
    BetterComponentsInternalConfig,
+   externalBetterComponentsContextValue,
    externalBetterCoreContextValue,
 } from "../components/BetterComponentsProvider";
 
@@ -28,6 +31,33 @@ export const checkBetterComponentsContextValue = (
    }
 
    return value !== undefined;
+};
+
+export const alertControls = {
+   createAlert: (alert: OmitProps<Alert, "id">): Alert => {
+      if (
+         !checkBetterComponentsContextValue(externalBetterComponentsContextValue, "alertControls.createAlert")
+      )
+         return undefined as any;
+
+      const readyAlert: Alert = {
+         id: generateRandomString(36),
+         ...alert,
+      };
+      externalBetterComponentsContextValue.setAlerts((oldValue) => [...oldValue, readyAlert]);
+
+      return readyAlert;
+   },
+   removeAlert: (alertId: string) => {
+      if (
+         !checkBetterComponentsContextValue(externalBetterComponentsContextValue, "alertControls.removeAlert")
+      )
+         return;
+
+      externalBetterComponentsContextValue.setAlerts((oldValue) =>
+         oldValue.filter((alert) => alert.id !== alertId),
+      );
+   },
 };
 
 export const pressStrength = (): Record<"p05" | "p1" | "p2" | "p3", number> => {

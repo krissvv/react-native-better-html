@@ -1,8 +1,8 @@
 import { Stack } from "expo-router";
 
-import { BetterComponentsPlugin, BetterComponentsProvider } from "../../src/index";
+import { alertsPlugin, BetterComponentsPlugin, BetterComponentsProvider, StatusBar } from "../../src/index";
 
-const plugins: BetterComponentsPlugin[] = [];
+const plugins: BetterComponentsPlugin[] = [alertsPlugin()];
 
 export default function RootLayout() {
    return (
@@ -14,6 +14,8 @@ export default function RootLayout() {
          }}
          plugins={plugins}
       >
+         <StatusBar />
+
          <Stack />
       </BetterComponentsProvider>
    );

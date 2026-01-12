@@ -42,6 +42,7 @@ export {
 
 import BetterComponentsProvider, {
    useBetterComponentsContext,
+   useAlertControls,
    type BetterComponentsProviderConfig,
 } from "./components/BetterComponentsProvider";
 
@@ -49,7 +50,7 @@ import { type AppConfig, type BetterComponentsConfig } from "./types/config";
 import { type ComponentMarginProps, type ComponentPaddingProps } from "./types/components";
 import { type PluginName, type BetterComponentsPlugin } from "./types/plugin";
 
-import { pressStrength } from "./utils/variableFunctions";
+import { alertControls, pressStrength } from "./utils/variableFunctions";
 
 import { useDevice, useKeyboard, useForm, useEventEmitter } from "./utils/hooks";
 import { getFormErrorObject } from "./utils/functions";
@@ -73,6 +74,7 @@ export * from "./plugins";
 export {
    BetterComponentsProvider,
    useBetterComponentsContext as useBetterComponentsContext,
+   useAlertControls,
    BetterComponentsProviderConfig,
 
    // Constants
@@ -95,6 +97,7 @@ export {
    getFormErrorObject,
 
    // Variable Functions
+   alertControls,
    pressStrength,
 
    // AsyncStorage

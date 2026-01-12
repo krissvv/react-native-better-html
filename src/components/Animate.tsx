@@ -6,7 +6,7 @@ import { ComponentStyle } from "../types/components";
 
 import { useComponentPropsGrouper } from "../utils/hooks";
 
-const defaultTransitionDuration = 0.15 * 1000;
+export const defaultTransitionDuration = 0.15 * 1000;
 
 type ComponentStyleProps<Style extends ViewStyle = ViewStyle> = Omit<
    ComponentStyle<Style>,

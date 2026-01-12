@@ -1,5 +1,5 @@
 import { memo, useEffect } from "react";
-import { Platform } from "react-native";
+import { ColorValue, Platform } from "react-native";
 import { Path, Svg } from "react-native-svg";
 import { AnyOtherString, IconName, OmitProps, useBetterCoreContext, useTheme } from "react-better-core";
 import { SymbolView } from "expo-symbols";
@@ -15,7 +15,7 @@ export type IconProps = {
    nameIOS?: IconNameIOS;
    /** @default 16 */
    size?: number;
-   color?: string;
+   color?: ColorValue;
 } & OmitProps<ViewProps, "width" | "height" | "pressType">;
 
 function Icon({ name, nameIOS, size = 16, color, ...props }: IconProps) {
@@ -50,7 +50,7 @@ function Icon({ name, nameIOS, size = 16, color, ...props }: IconProps) {
          {...props}
       >
          {Platform.OS === "ios" && nameIOS ? (
-            <SymbolView name={nameIOS} tintColor={svgColor} size={size} />
+            <SymbolView name={nameIOS} tintColor={svgColor} size={size * 1.12} />
          ) : (
             <Svg
                width={size}
