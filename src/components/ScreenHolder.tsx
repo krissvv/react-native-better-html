@@ -11,6 +11,8 @@ export type ScreenHolderProps = {
    noScroll?: boolean;
    /** @default false */
    noSideSpace?: boolean;
+   /** @default false */
+   noTopSpace?: boolean;
    /** @default 1 (second) */
    refreshTimeout?: number;
    onRefresh?: () => void;
@@ -40,6 +42,7 @@ type ScreenHolderComponentType = {
 const ScreenHolderComponent: ScreenHolderComponentType = ({
    noScroll,
    noSideSpace,
+   noTopSpace,
    refreshTimeout = 1,
    onRefresh,
    onRefreshEnd,
@@ -80,7 +83,10 @@ const ScreenHolderComponent: ScreenHolderComponentType = ({
       <View
          flex={1}
          paddingHorizontal={!noSideSpace ? theme.styles.space : undefined}
-         paddingTop={theme.styles.gap + (insideTopSafeArea ? device.safeArea.afterCalculations.top : 0)}
+         paddingTop={
+            (!noTopSpace ? theme.styles.gap : 0) +
+            (insideTopSafeArea ? device.safeArea.afterCalculations.top : 0)
+         }
          paddingBottom={
             Platform.OS === "ios" && keyboard.isOpened
                ? device.safeArea.afterCalculations.top
@@ -104,10 +110,10 @@ const ScreenHolderComponent: ScreenHolderComponentType = ({
                      ? 0
                      : theme.styles.gap
                   : keepFooterOnKeyboardOpened
-                  ? Platform.OS === "ios"
-                     ? device.safeArea.afterCalculations.bottom
-                     : theme.styles.gap
-                  : undefined)
+                    ? Platform.OS === "ios"
+                       ? device.safeArea.afterCalculations.bottom
+                       : theme.styles.gap
+                    : undefined)
             }
             behavior={Platform.OS === "ios" ? "padding" : "height"}
          >
@@ -175,8 +181,8 @@ ScreenHolderComponent.footer = function Footer({
             (Platform.OS === "ios" ? keyboard.willOpen : keyboard.isOpened) && withNoHeader
                ? theme.styles.gap
                : insideBottomSafeArea
-               ? device.safeArea.afterCalculations.bottom
-               : undefined
+                 ? device.safeArea.afterCalculations.bottom
+                 : undefined
          }
       >
          {children}

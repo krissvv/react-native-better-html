@@ -10,7 +10,7 @@ export const defaultTransitionDuration = 0.15 * 1000;
 
 type ComponentStyleProps<Style extends ViewStyle = ViewStyle> = Omit<
    ComponentStyle<Style>,
-   "transformOrigin"
+   "transformOrigin" | "transitionDuration"
 >;
 type AnimationStyleProps<Style extends ViewStyle = ViewStyle> = ComponentStyle<Style> & PropsTransforms;
 
