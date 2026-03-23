@@ -20,7 +20,7 @@ import {
 } from "react-native";
 import RNDateTimePicker, {
    DateTimePickerAndroid,
-   DateTimePickerEvent,
+   DateTimePickerChangeEvent,
 } from "@react-native-community/datetimepicker";
 import {
    darkenColor,
@@ -190,7 +190,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
          ? parseFloat(paddingVertical.toString())
          : (theme.styles.space + theme.styles.gap) / 2;
       const readyHeight =
-         height ?? isIOSDateTime
+         (height ?? isIOSDateTime)
             ? undefined
             : borderWidth +
               readyPaddingVertical +
@@ -199,8 +199,8 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
               borderWidth +
               (Platform.OS === "android" ? 2 : 0);
 
-      const onChangeRNDateTimePicker = useCallback(
-         (event: DateTimePickerEvent, data?: Date) => {
+      const onValueChangeRNDateTimePicker = useCallback(
+         (event: DateTimePickerChangeEvent, data?: Date) => {
             setInternalDateValue(data);
             onChange?.(data?.toISOString() ?? "");
          },
@@ -227,13 +227,13 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                         label: "Cancel",
                         textColor: theme.colors.textSecondary,
                      },
-                     onChange: onChangeRNDateTimePicker,
+                     onValueChange: onValueChangeRNDateTimePicker,
                   });
                } else if (Platform.OS === "ios") {
                }
             }
          },
-         [onPress, type, internalDateValue, onChangeRNDateTimePicker],
+         [onPress, type, internalDateValue, onValueChangeRNDateTimePicker],
       );
       const onFocusElement = useCallback((event: FocusEvent) => {
          setIsFocused.setTrue();
@@ -305,20 +305,16 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
             type === "date"
                ? date
                : internalDateValue
-               ? `${hours.length === 1 ? `0${hours}` : hours}:${
-                    minutes.length === 1 ? `0${minutes}` : minutes
-                 }`
-               : "",
+                 ? `${hours.length === 1 ? `0${hours}` : hours}:${
+                      minutes.length === 1 ? `0${minutes}` : minutes
+                   }`
+                 : "",
          );
       }, [internalDateValue]);
 
-      useImperativeHandle(
-         ref,
-         (): TextInput => {
-            return textInputRef.current!;
-         },
-         [],
-      );
+      useImperativeHandle(ref, (): TextInput => {
+         return textInputRef.current!;
+      }, []);
 
       const withPressInputField = !!onPress || type === "date" || type === "time";
       const prefixSuffixBackgroundColor =
@@ -389,7 +385,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                         accentColor={theme.colors.primary}
                         themeVariant={colorTheme === "dark" ? "dark" : "light"}
                         style={rnDateTimePickerStyle}
-                        onChange={onChangeRNDateTimePicker}
+                        onValueChange={onValueChangeRNDateTimePicker}
                      />
                   </>
                ) : (
@@ -424,8 +420,8 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                            isFocused
                               ? theme.colors.primary
                               : isError
-                              ? theme.colors.error
-                              : theme.colors.border
+                                ? theme.colors.error
+                                : theme.colors.border
                         }
                         overflow="hidden"
                      >
@@ -458,7 +454,9 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                            readOnly={!editable || disabled || type === "date" || type === "time"}
                            textAlign={textAlign}
                            editable={!disabled}
-                           keyboardAppearance={keyboardAppearance ?? colorTheme === "dark" ? "dark" : "light"}
+                           keyboardAppearance={
+                              (keyboardAppearance ?? colorTheme === "dark") ? "dark" : "light"
+                           }
                            keyboardType={keyboardType}
                            cursorColor={theme.colors.primary}
                            selectionColor={theme.colors.primary}
@@ -574,13 +572,9 @@ InputFieldComponent.password = forwardRef(function Password(props, ref) {
       inputFieldRef.current?.focus();
    }, []);
 
-   useImperativeHandle(
-      ref,
-      (): TextInput => {
-         return inputFieldRef.current!;
-      },
-      [],
-   );
+   useImperativeHandle(ref, (): TextInput => {
+      return inputFieldRef.current!;
+   }, []);
 
    return (
       <InputFieldComponent
