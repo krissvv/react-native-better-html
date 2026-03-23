@@ -46,7 +46,7 @@
    "peerDependencies": {
       "@legendapp/motion": "^2.5.3",
       "@react-native-async-storage/async-storage": "^2.2.0",
-      "@react-native-community/datetimepicker": "^8.5.1",
+      "@react-native-community/datetimepicker": "^9.1.0",
       "crypto-js": "^4.2.0",
       "react": "^19.1.0",
       "react-better-core": "^1.0.8",
