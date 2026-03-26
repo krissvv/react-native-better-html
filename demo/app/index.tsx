@@ -1,4 +1,5 @@
 import { memo, useState } from "react";
+import { Platform } from "react-native";
 import { Stack } from "expo-router";
 
 import {
@@ -185,6 +186,16 @@ function Index() {
             <InputField
                placeholder="Hello"
                suffix="EUR"
+               onPressSuffix={() => console.log(new Date().toString())}
+            />
+
+            <InputField
+               placeholder="Hello"
+               suffix={
+                  Platform.OS === "ios" ? <Icon name="chevronRight" nameIOS="chevron.right" /> : undefined
+               }
+               editable={false}
+               onPress={() => console.log(new Date().toString())}
                onPressSuffix={() => console.log(new Date().toString())}
             />
 

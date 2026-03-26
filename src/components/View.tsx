@@ -15,6 +15,8 @@ import { ComponentStyle } from "../types/components";
 
 const touchableHighlightStyleMoveToContent: (keyof ComponentStyle)[] = [
    "width",
+   "alignItems",
+   "justifyContent",
    "backgroundColor",
    "padding",
    "paddingTop",

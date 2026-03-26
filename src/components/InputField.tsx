@@ -332,6 +332,12 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
          </View>
       );
 
+      const borderColor = isFocused
+         ? theme.colors.primary
+         : isError
+           ? theme.colors.error
+           : theme.colors.border;
+
       return (
          <Animate.View
             flex={flex}
@@ -346,6 +352,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                {prefix && (
                   <View
                      isRow
+                     position="relative"
                      height="100%"
                      backgroundColor={prefixSuffixBackgroundColor}
                      alignItems="center"
@@ -356,21 +363,26 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                      borderBottomLeftRadius={theme.styles.borderRadius}
                      borderColor={theme.colors.border}
                      paddingHorizontal={readyPaddingHorizontal}
+                     zIndex={1}
                      onPress={onPressPrefix}
                   >
                      {typeof prefix === "string" ? (
-                        <Text
-                           fontWeight={700}
-                           lineHeight={lineHeight}
-                           marginTop={
-                              Platform.OS === "ios" && onPressPrefix ? readyPaddingVertical : undefined
-                           }
-                        >
+                        <Text fontWeight={700} lineHeight={lineHeight}>
                            {prefix}
                         </Text>
                      ) : (
                         prefix
                      )}
+
+                     <Animate.View
+                        position="absolute"
+                        top={0}
+                        right={-1}
+                        width={1}
+                        height="100%"
+                        initialBackgroundColor={theme.colors.border}
+                        animateBackgroundColor={borderColor}
+                     />
                   </View>
                )}
 
@@ -410,19 +422,15 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                         flex={1}
                         justifyContent="center"
                         backgroundColor={theme.colors.backgroundContent}
-                        borderTopLeftRadius={prefix ? 0 : theme.styles.borderRadius}
-                        borderBottomLeftRadius={prefix ? 0 : theme.styles.borderRadius}
-                        borderTopRightRadius={suffix ? 0 : theme.styles.borderRadius}
-                        borderBottomRightRadius={suffix ? 0 : theme.styles.borderRadius}
+                        borderTopLeftRadius={prefix ? 2 : theme.styles.borderRadius}
+                        borderBottomLeftRadius={prefix ? 2 : theme.styles.borderRadius}
+                        borderTopRightRadius={suffix ? 2 : theme.styles.borderRadius}
+                        borderBottomRightRadius={suffix ? 2 : theme.styles.borderRadius}
                         borderWidth={borderWidth}
+                        marginLeft={prefix ? -2 : 0}
+                        marginRight={suffix ? -2 : 0}
                         initialBorderColor={theme.colors.border}
-                        animateBorderColor={
-                           isFocused
-                              ? theme.colors.primary
-                              : isError
-                                ? theme.colors.error
-                                : theme.colors.border
-                        }
+                        animateBorderColor={borderColor}
                         overflow="hidden"
                      >
                         {leftIcon && (
@@ -491,30 +499,37 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
                {suffix && (
                   <View
                      isRow
+                     position="relative"
                      height="100%"
                      backgroundColor={prefixSuffixBackgroundColor}
                      alignItems="center"
+                     justifyContent="center"
                      borderWidth={borderWidth}
                      borderLeftWidth={0}
                      borderTopRightRadius={theme.styles.borderRadius}
                      borderBottomRightRadius={theme.styles.borderRadius}
                      borderColor={theme.colors.border}
                      paddingHorizontal={readyPaddingHorizontal}
+                     zIndex={1}
                      onPress={onPressSuffix}
                   >
                      {typeof suffix === "string" ? (
-                        <Text
-                           fontWeight={700}
-                           lineHeight={lineHeight}
-                           marginTop={
-                              Platform.OS === "ios" && onPressSuffix ? readyPaddingVertical : undefined
-                           }
-                        >
+                        <Text fontWeight={700} lineHeight={lineHeight}>
                            {suffix}
                         </Text>
                      ) : (
                         suffix
                      )}
+
+                     <Animate.View
+                        position="absolute"
+                        top={0}
+                        left={-1}
+                        width={1}
+                        height="100%"
+                        initialBackgroundColor={theme.colors.border}
+                        animateBackgroundColor={borderColor}
+                     />
                   </View>
                )}
             </View>
