@@ -78,7 +78,13 @@ function Index() {
             <Switch {...form.getSwitchProps("switch")} />
 
             <CheckBox {...form.getCheckBoxProps("checkBox")} />
-            <CheckBox text="This is a checkbox with text" required {...form.getCheckBoxProps("checkBox")} />
+            <CheckBox text="This is a checkbox with text" required />
+            <CheckBox text="This is a checkbox with text" required disabled />
+            <CheckBox
+               text="This is a checkbox with text and error message"
+               required
+               errorMessage="This is required field"
+            />
             <CheckBox
                text={
                   <View isRow columnGap={5} flexWrap="wrap">
@@ -97,7 +103,6 @@ function Index() {
                      <Label required />
                   </View>
                }
-               {...form.getCheckBoxProps("checkBox")}
             />
 
             <ListItem

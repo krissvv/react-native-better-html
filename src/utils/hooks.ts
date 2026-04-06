@@ -260,13 +260,15 @@ export function useForm<
                  },
               } as ListItemProps as any)
             : {
+                 required: requiredFields?.includes(field),
                  isChecked: values[field] as boolean,
+                 errorMessage: errors[field],
                  onChange: (value) => {
                     setFieldValue(field, value as FormFields[FieldName]);
                  },
               };
       },
-      [values, setFieldValue],
+      [values, setFieldValue, errors, requiredFields],
    );
    const reset = useCallback(() => {
       setValues(defaultValues);
@@ -284,7 +286,9 @@ export function useForm<
    }, [validate, values]);
    const canSubmit = useMemo<boolean>(() => {
       const requiredFieldsHaveValues =
-         requiredFields?.every((field) => values[field] !== undefined && values[field] !== "") ?? true;
+         requiredFields?.every(
+            (field) => values[field] !== undefined && values[field] !== "" && values[field] !== false,
+         ) ?? true;
 
       return isValid && requiredFieldsHaveValues;
    }, [isValid, requiredFields]);

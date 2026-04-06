@@ -20,6 +20,8 @@ export type CheckBoxProps = {
    required?: boolean;
    /** @default false */
    disabled?: boolean;
+   infoMessage?: string;
+   errorMessage?: string;
    onChange?: (isChecked: boolean) => void;
 };
 
@@ -30,6 +32,8 @@ function CheckBox({
    text,
    required,
    disabled,
+   infoMessage,
+   errorMessage,
    onChange,
 }: CheckBoxProps) {
    const theme = useTheme();
@@ -90,25 +94,53 @@ function CheckBox({
    );
 
    return text ? (
-      <>
+      <View gap={theme.styles.gap / 3}>
          <View isRow alignItems="center" gap={theme.styles.gap}>
             {checkBox}
 
             <View
-               width={"100%"}
+               width="100%"
                flexShrink={1}
                pressType="opacity"
                pressStrength={pressStrength().p3}
-               onPress={onPressElement}
+               onPress={!disabled ? onPressElement : undefined}
             >
-               <View isRow alignItems="flex-start" gap={2}>
-                  <View flexShrink={1}>{typeof text === "string" ? <Text>{text}</Text> : text}</View>
+               <Animate.View initialOpacity={1} animateOpacity={disabled ? 0.6 : 1}>
+                  <View isRow alignItems="flex-start" gap={2}>
+                     <View flexShrink={1}>{typeof text === "string" ? <Text>{text}</Text> : text}</View>
 
-                  {required && <Label required />}
-               </View>
+                     {required && <Label required />}
+                  </View>
+               </Animate.View>
             </View>
          </View>
-      </>
+
+         {infoMessage && (
+            <Animate.Text
+               fontSize={14}
+               color={theme.colors.textSecondary}
+               initialHeight={0}
+               initialOpacity={0}
+               animateHeight={17}
+               animateOpacity={1}
+            >
+               {infoMessage}
+            </Animate.Text>
+         )}
+
+         {errorMessage && (
+            <Animate.Text
+               fontSize={14}
+               color={theme.colors.error}
+               initialHeight={0}
+               initialOpacity={0}
+               animateHeight={17}
+               animateOpacity={1}
+            >
+               {errorMessage}
+            </Animate.Text>
+         )}
+      </View>
    ) : (
       checkBox
    );
