@@ -9,6 +9,7 @@ import { ComponentPropWithRef, ComponentStyle } from "../types/components";
 
 import { InputFieldProps, InputFieldRef } from "../components/InputField";
 import { SwitchProps } from "../components/Switch";
+import { CheckBoxProps } from "../components/CheckBox";
 import { ListItemProps } from "../components/ListItem";
 
 export function useDevice() {
@@ -214,7 +215,7 @@ export function useForm<
             value: values[field]?.toString() ?? "",
             errorMessage: errors[field],
             isError: !!errors[field],
-            returnKeyLabel: isLastInputField ? additional?.lastInputFieldReturnKeyLabel ?? "done" : "next",
+            returnKeyLabel: isLastInputField ? (additional?.lastInputFieldReturnKeyLabel ?? "done") : "next",
             onPressEnter: () => {
                if (isLastInputField) onSubmitFunction();
                else inputFieldRefs.current[Object.keys(values)[thisInputFieldIndex + 1]]?.focus();
@@ -242,6 +243,24 @@ export function useForm<
               } as ListItemProps as any)
             : {
                  isEnabled: values[field] as boolean,
+                 onChange: (value) => {
+                    setFieldValue(field, value as FormFields[FieldName]);
+                 },
+              };
+      },
+      [values, setFieldValue],
+   );
+   const getCheckBoxProps = useCallback(
+      <FieldName extends keyof FormFields>(field: FieldName, insideListItem?: boolean): CheckBoxProps => {
+         return insideListItem
+            ? ({
+                 checkBoxIsChecked: values[field] as boolean,
+                 checkBoxOnChange: (value) => {
+                    setFieldValue(field, value as FormFields[FieldName]);
+                 },
+              } as ListItemProps as any)
+            : {
+                 isChecked: values[field] as boolean,
                  onChange: (value) => {
                     setFieldValue(field, value as FormFields[FieldName]);
                  },
@@ -278,6 +297,7 @@ export function useForm<
       setFieldsValue,
       getInputFieldProps,
       getSwitchProps,
+      getCheckBoxProps,
       focusField,
       inputFieldRefs: inputFieldRefs.current,
       validate: validateForm,

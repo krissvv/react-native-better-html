@@ -16,6 +16,7 @@ import {
    useForm,
    useTheme,
    View,
+   CheckBox,
 } from "../../src/index";
 
 function Index() {
@@ -31,6 +32,7 @@ function Index() {
          third: "",
          date: "",
          switch: false,
+         checkBox: false,
       },
       requiredFields: ["first"],
       onSubmit: (values) => {
@@ -74,6 +76,8 @@ function Index() {
 
             <Switch {...form.getSwitchProps("switch")} />
 
+            <CheckBox {...form.getCheckBoxProps("checkBox")} />
+
             <ListItem
                title="awdawd"
                description="aiwdv aywjdv ajwyvd"
@@ -91,6 +95,15 @@ function Index() {
                icon="XMark"
                iconIOS="xmark"
                rightElement="switch"
+               insideScreenHolder
+            />
+
+            <ListItem
+               title="awdawd"
+               description="aiwdv aywjdv ajwyvd"
+               icon="XMark"
+               iconIOS="xmark"
+               rightElement="checkBox"
                insideScreenHolder
             />
 

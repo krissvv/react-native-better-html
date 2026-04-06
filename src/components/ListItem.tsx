@@ -8,6 +8,7 @@ import View, { ViewProps } from "./View";
 import Text from "./Text";
 import Icon, { IconNameIOS } from "./Icon";
 import Switch from "./Switch";
+import CheckBox from "./CheckBox";
 
 export type ListItemProps = {
    icon?: IconName | AnyOtherString;
@@ -15,7 +16,7 @@ export type ListItemProps = {
    title?: string;
    description?: string;
    descriptionSelectable?: boolean;
-   rightElement?: "arrow" | "switch";
+   rightElement?: "arrow" | "switch" | "checkBox";
    /** @default theme.colors.backgroundBase */
    backgroundColor?: ViewProps["backgroundColor"];
    /** @default false */
@@ -25,6 +26,8 @@ export type ListItemProps = {
    rightValueSelectable?: boolean;
    switchIsEnabled?: boolean;
    switchOnChange?: (isEnabled: boolean) => void;
+   checkBoxIsChecked?: boolean;
+   checkBoxOnChange?: (isChecked: boolean) => void;
 };
 
 function ListItem({
@@ -41,6 +44,8 @@ function ListItem({
    rightValueSelectable,
    switchIsEnabled,
    switchOnChange,
+   checkBoxIsChecked,
+   checkBoxOnChange,
 }: ListItemProps) {
    const theme = useTheme();
    const device = useDevice();
@@ -96,6 +101,8 @@ function ListItem({
                      </View>
                   ) : rightElement === "switch" ? (
                      <Switch isEnabled={switchIsEnabled} onChange={switchOnChange} />
+                  ) : rightElement === "checkBox" ? (
+                     <CheckBox isChecked={checkBoxIsChecked} onChange={checkBoxOnChange} />
                   ) : undefined}
                </>
             ) : undefined}

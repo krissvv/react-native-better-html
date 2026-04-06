@@ -66,6 +66,7 @@ import Image, { type ImageProps } from "./components/Image";
 import Icon, { type IconProps, type IconNameIOS } from "./components/Icon";
 import InputField, { type InputFieldProps, type InputFieldRef } from "./components/InputField";
 import Switch, { type SwitchProps } from "./components/Switch";
+import CheckBox, { type CheckBoxProps } from "./components/CheckBox";
 import StatusBar, { type StatusBarProps } from "./components/StatusBar";
 import ListItem, { type ListItemProps } from "./components/ListItem";
 
@@ -129,6 +130,8 @@ export {
    InputFieldRef,
    Switch,
    SwitchProps,
+   CheckBox,
+   CheckBoxProps,
    StatusBar,
    StatusBarProps,
    ListItem,

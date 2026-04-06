@@ -63,16 +63,19 @@ function Switch({ isEnabled, defaultIsEnabled, disabled, onChange }: SwitchProps
             width="100%"
             height={ballGap + ballSize + ballGap}
             borderRadius={999}
-            initialOpacity={1}
-            animateOpacity={disabled ? 0.6 : 1}
             initialBackgroundColor={theme.colors.border}
             animateBackgroundColor={enabled ? theme.colors.primary : theme.colors.border}
+            initialOpacity={1}
+            animateOpacity={disabled ? 0.6 : 1}
          >
             <Animate.View
                width={ballSize}
                height={ballSize}
                top={ballGap}
                borderRadius={999}
+               transitionType="spring"
+               transitionDamping={20}
+               transitionStiffness={230}
                backgroundColor={theme.colors.backgroundContent}
                initialX={ballGap}
                animateX={enabled ? holderWidth - ballGap - ballSize : ballGap}
