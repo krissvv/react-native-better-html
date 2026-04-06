@@ -35,6 +35,7 @@ import { ComponentMarginProps, ComponentPaddingProps, ComponentPropWithRef } fro
 import View from "./View";
 import Text from "./Text";
 import Animate from "./Animate";
+import Label from "./Label";
 import Icon, { IconProps } from "./Icon";
 
 export type InputFieldProps = {
@@ -322,15 +323,7 @@ const InputFieldComponent: InputFieldComponentType = forwardRef<TextInput, Input
             ? darkenColor(theme.colors.backgroundContent, 0.03)
             : lightenColor(theme.colors.backgroundContent, 0.1);
 
-      const labelComponent = label && (
-         <View isRow alignItems="center" gap={2}>
-            <Text fontSize={14} color={isError ? theme.colors.error : theme.colors.textSecondary}>
-               {label}
-            </Text>
-
-            {required && <Text color={theme.colors.error}>*</Text>}
-         </View>
-      );
+      const labelComponent = label ? <Label text={label} isError={isError} required={required} /> : undefined;
 
       const borderColor = isFocused
          ? theme.colors.primary

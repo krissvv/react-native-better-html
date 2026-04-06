@@ -17,6 +17,7 @@ import {
    useTheme,
    View,
    CheckBox,
+   Label,
 } from "../../src/index";
 
 function Index() {
@@ -77,6 +78,27 @@ function Index() {
             <Switch {...form.getSwitchProps("switch")} />
 
             <CheckBox {...form.getCheckBoxProps("checkBox")} />
+            <CheckBox text="This is a checkbox with text" required {...form.getCheckBoxProps("checkBox")} />
+            <CheckBox
+               text={
+                  <View isRow columnGap={5} flexWrap="wrap">
+                     <Text>I agree with</Text>
+                     <View pressType="opacity">
+                        <Text fontWeight={700} textDecorationLine="underline">
+                           Terms & Conditions
+                        </Text>
+                     </View>
+                     <Text>and</Text>
+                     <View pressType="opacity">
+                        <Text fontWeight={700} textDecorationLine="underline">
+                           Privacy Policy
+                        </Text>
+                     </View>
+                     <Label required />
+                  </View>
+               }
+               {...form.getCheckBoxProps("checkBox")}
+            />
 
             <ListItem
                title="awdawd"

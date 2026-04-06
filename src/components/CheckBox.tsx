@@ -7,18 +7,31 @@ import { pressStrength } from "../utils/variableFunctions";
 import View from "./View";
 import Animate from "./Animate";
 import Icon from "./Icon";
+import Text from "./Text";
+import Label from "./Label";
 
 export type CheckBoxProps = {
    isChecked?: boolean;
    defaultIsChecked?: boolean;
    /** @default 36 */
    size?: number;
+   text?: string | React.ReactNode;
+   /** @default false */
+   required?: boolean;
    /** @default false */
    disabled?: boolean;
    onChange?: (isChecked: boolean) => void;
 };
 
-function CheckBox({ isChecked, defaultIsChecked, size = 36, disabled, onChange }: CheckBoxProps) {
+function CheckBox({
+   isChecked,
+   defaultIsChecked,
+   size = 36,
+   text,
+   required,
+   disabled,
+   onChange,
+}: CheckBoxProps) {
    const theme = useTheme();
 
    const [checked, setChecked] = useBooleanState(isChecked ?? defaultIsChecked);
@@ -34,7 +47,7 @@ function CheckBox({ isChecked, defaultIsChecked, size = 36, disabled, onChange }
       setChecked.setState(isChecked);
    }, [isChecked]);
 
-   return (
+   const checkBox = (
       <View
          width={size}
          borderRadius={theme.styles.borderRadius}
@@ -74,6 +87,30 @@ function CheckBox({ isChecked, defaultIsChecked, size = 36, disabled, onChange }
             </Animate.View>
          </Animate.View>
       </View>
+   );
+
+   return text ? (
+      <>
+         <View isRow alignItems="center" gap={theme.styles.gap}>
+            {checkBox}
+
+            <View
+               width={"100%"}
+               flexShrink={1}
+               pressType="opacity"
+               pressStrength={pressStrength().p3}
+               onPress={onPressElement}
+            >
+               <View isRow alignItems="flex-start" gap={2}>
+                  <View flexShrink={1}>{typeof text === "string" ? <Text>{text}</Text> : text}</View>
+
+                  {required && <Label required />}
+               </View>
+            </View>
+         </View>
+      </>
+   ) : (
+      checkBox
    );
 }
 

@@ -58,6 +58,7 @@ import { generateAsyncStorage } from "./utils/asyncStorage";
 
 import View, { type ViewProps } from "./components/View";
 import Text, { type TextProps } from "./components/Text";
+import Label, { type LabelProps } from "./components/Label";
 import Button, { type ButtonProps } from "./components/Button";
 import Loader, { type LoaderProps, type LoaderSize } from "./components/Loader";
 import Animate, { type AnimateViewProps, type AnimateTextProps } from "./components/Animate";
@@ -109,6 +110,8 @@ export {
    ViewProps,
    Text,
    TextProps,
+   Label,
+   LabelProps,
    Button,
    ButtonProps,
    Loader,
